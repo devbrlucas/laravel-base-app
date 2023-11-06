@@ -1,0 +1,16 @@
+{
+    "name": "devbrlucas/laravel-base-app",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Devbrlucas\\LaravelBaseApp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Lucas Moreira dos Santos",
+            "email": "lucasmdsandradina@outlook.com"
+        }
+    ],
+    "require": {}
+}
