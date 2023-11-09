@@ -18,7 +18,7 @@ class LaravelBaseAppServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../../config/laravel-base-app.php' => config_path('laravel-base-app.php'),
-        ]);
+        ], 'laravel-base-app.config');
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CreateInitialUser::class,

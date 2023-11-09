@@ -30,6 +30,8 @@ class SendCurrentUserHeader
         ];
         $data = json_encode($data);
         $response->headers->set('App-Current-User', $data);
+        $exposedHeaders = $response->headers->get('Access-Control-Expose-Headers', '');
+        $response->headers->set('Access-Control-Expose-Headers', "App-Current-User,$exposedHeaders");
         return $response;
     }
 }
