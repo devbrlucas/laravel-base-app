@@ -22,7 +22,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "DevBRLucas\\Providers\\LaravelBaseAppServiceProvider"
+                "DevBRLucas\\LaravelBaseApp\\Providers\\LaravelBaseAppServiceProvider"
             ]
         }
     }
