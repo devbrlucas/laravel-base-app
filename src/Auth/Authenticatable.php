@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class Authenticable extends Model
+class Authenticatable extends Model
 {
     use HasApiTokens;
     

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DevBRLucas\LaravelBaseApp\Http\Middleware;
 
 use Closure;
-use DevBRLucas\Auth\Authenticable;
+use DevBRLucas\LaravelBaseApp\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,7 +17,7 @@ class SendCurrentUserHeader
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
-        $user = Authenticable::user();
+        $user = Authenticatable::user();
         if (!$user) return $response;
         $class = get_class($user);
         $matches = [];
