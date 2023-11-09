@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DevBRLucas\Enums\PDF;
+namespace DevBRLucas\LaravelBaseApp\Enums\PDF;
 
 enum Orientation: string
 {

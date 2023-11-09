@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DevBRLucas\Providers;
+namespace DevBRLucas\LaravelBaseApp\Providers;
 
-use DevBRLucas\Console\Commands\CreateInitialUser;
+use DevBRLucas\LaravelBaseApp\Console\Commands\CreateInitialUser;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelBaseAppServiceProvider extends ServiceProvider

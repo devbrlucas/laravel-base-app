@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DevBRLucas\Auth;
+namespace DevBRLucas\LaravelBaseApp\Auth;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace DevBRLucas\Support;
+namespace DevBRLucas\LaravelBaseApp\Support;
 
-use DevBRLucas\Enums\PDF\Orientation;
+use DevBRLucas\LaravelBaseApp\Enums\PDF\Orientation;
 use Dompdf\Dompdf;
 
 class PDF
