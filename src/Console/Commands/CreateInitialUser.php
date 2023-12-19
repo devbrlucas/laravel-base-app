@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevBRLucas\LaravelBaseApp\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class CreateInitialUser extends Command
 {
@@ -14,20 +15,24 @@ class CreateInitialUser extends Command
 
     public function handle(): int
     {
-        $this->warn('Creating initial user');
-        $data = [];
-        $fields = config('laravel-base-app.initial_user_fields');
-        foreach ($fields as $field) {
-            $data[$field] = $this->ask("Enter the user's $field");
-        }
-        do {
-            $password = $this->secret('Enter the user\'s password');
-            $passwordConfirmation = $this->secret('Confirm the user\'s password');
-            if ($password !== $passwordConfirmation) $this->error('Passwords do not match');
-        } while ($password !== $passwordConfirmation);
-        $data['password'] = $password;
-        $this->argument('model')::query()->create($data);
-        $this->info('User created successfully');
+        DB::transaction(function(): void {
+            $this->warn('Creating initial user');
+            $data = [];
+            $fields = config('laravel-base-app.initial_user_fields');
+            foreach ($fields as $field) {
+                $data[$field] = $this->ask("Enter the user's $field");
+            }
+            do {
+                $password = $this->secret('Enter the user\'s password');
+                $passwordConfirmation = $this->secret('Confirm the user\'s password');
+                if ($password !== $passwordConfirmation) $this->error('Passwords do not match');
+            } while ($password !== $passwordConfirmation);
+            $data['password'] = $password;
+            $user = $this->argument('model')::query()->create($data);
+            $callback = config('laravel-base-app.initial_user_fields');
+            if ($callback) $callback($user);
+            $this->info('User created successfully');
+        });
         exit(0);
     }
 }

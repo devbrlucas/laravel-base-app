@@ -42,10 +42,12 @@ class PDF
     public static function headers(): array
     {
         $file = static::$title;
+        $content = static::$content;
+        static::$title = static::$content = '';
         return [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => "filename=$file.pdf",
-            'Content-Length' => strlen(static::$content),
+            'Content-Length' => strlen($content),
         ];
     }
 }

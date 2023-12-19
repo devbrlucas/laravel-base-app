@@ -17,7 +17,7 @@ class SendCurrentUserHeader
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
-        $user = Authenticatable::user();
+        $user = Authenticatable::logged();
         if (!$user) return $response;
         $class = get_class($user);
         $matches = [];

@@ -33,7 +33,7 @@ class Authenticatable extends Model
 
     public static function logout(): void
     {
-        static::user()?->cleanTokens();
+        static::logged()?->cleanTokens();
     }
 
     public function cleanTokens(): void
@@ -41,12 +41,21 @@ class Authenticatable extends Model
         $this->tokens()->delete();
     }
 
-    public static function user(): static | null
+    public static function logged(): static | null
     {
         /** @var Request */
         $request = App::make(Request::class);
         $accessToken = PersonalAccessToken::findToken($request->bearerToken());
         if (!$accessToken) return null;
         return $accessToken->tokenable()->first();
+    }
+
+    public function refreshToken(): string
+    {
+        /** @var PersonalAccessToken | null */
+        $accessToken = static::logged()?->tokens()->first();
+        abort_unless(401, $accessToken);
+        $remember = !((bool) $accessToken->expires_at);
+        return $this->generateToken($remember);
     }
 }
