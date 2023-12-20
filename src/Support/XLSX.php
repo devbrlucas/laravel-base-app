@@ -40,7 +40,7 @@ class XLSX
         static::$filename = static::$content = '';
         return [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => "filename=$file.pdf",
+            'Content-Disposition' => "filename=$file.xlsx",
             'Content-Length' => strlen($content),
         ];
     }
