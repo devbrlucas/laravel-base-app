@@ -6,6 +6,7 @@ namespace DevBRLucas\LaravelBaseApp\Auth;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
@@ -17,9 +18,11 @@ class Authenticatable extends Model
     
     public static function login(array $data): static | false
     {
-        $user = static::query()->where('email', $data['email'])->first();
+        unset($data['remember']);
+        $password = Arr::pull($data, 'password');
+        $user = static::query()->where($data)->first();
         if (!$user) return false;
-        return Hash::check($data['password'], $user->password) ? $user : false;
+        return Hash::check($password, $user->password) ? $user : false;
     }
 
     public function generateToken(bool $remember): string

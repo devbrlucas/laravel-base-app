@@ -1,7 +1,7 @@
 {
     "name": "devbrlucas/laravel-base-app",
     "type": "library",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "autoload": {
         "psr-4": {
             "DevBRLucas\\LaravelBaseApp\\": "src/"
