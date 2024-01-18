@@ -29,7 +29,7 @@ class CreateInitialUser extends Command
             } while ($password !== $passwordConfirmation);
             $data['password'] = $password;
             $user = $this->argument('model')::query()->create($data);
-            $callback = config('laravel-base-app.initial_user_fields');
+            $callback = config('laravel-base-app.initial_user_callback');
             if ($callback) $callback($user);
             $this->info('User created successfully');
         });
