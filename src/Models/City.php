@@ -36,8 +36,8 @@ class City extends Model
         }
     }
 
-    public static function random(): self
+    public static function random(array $columns = ['*']): self
     {
-        return static::query()->inRandomOrder()->first();
+        return static::query()->inRandomOrder()->first($columns);
     }
 }
