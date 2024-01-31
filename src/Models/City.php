@@ -35,4 +35,9 @@ class City extends Model
             static::query()->create($data);
         }
     }
+
+    public static function random(): self
+    {
+        return static::query()->inRandomOrder()->first();
+    }
 }
