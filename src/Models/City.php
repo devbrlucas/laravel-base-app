@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
+    public $timestamps = false;
+    
     public static function getAll(?string $filter = null, ?int $stateId = null): Collection
     {
         return static::query()

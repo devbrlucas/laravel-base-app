@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class State extends Model
 {
+    public $timestamps = false;
+    
     public function getAll(?string $filter = null, ?string $region = null): Collection
     {
         return static::query()
