@@ -5,11 +5,15 @@ declare(strict_types=1);
 return [
     /*
     |----------------------------------------------------------------------------------------
-    | Here are the settings for the `devbrlucas:init-user`
-    | command
     |
-    | initial_user_fields - Fields requested in the terminal for registration
-    | initial_user_callback - Class with an __invoke method to handle the created user
+    | initial_user_fields           Campos requisitados ao criar um usuário com o comando
+    |                               `laravel-base-app:init-user`
+    | initial_user_callback         Classe com __invoke() que é chamada quando o usuário
+    |                               é criado com o comando `laravel-base-app:init-user`,
+    |                               tendo o `model` informado (\App\Models\User por exemplo)
+    |                               como parâmetro
+    | create_states_cities_tables   Se `true`, executa as migrations que cria as tabelas de
+    |                               cidades e estados brasileiros
     |
     |----------------------------------------------------------------------------------------
     |
@@ -20,5 +24,6 @@ return [
         'email',
     ],
     'initial_user_callback' => null,
+    'create_states_cities_tables' => false,
     
 ];

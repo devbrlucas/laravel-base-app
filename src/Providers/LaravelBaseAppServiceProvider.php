@@ -23,6 +23,9 @@ class LaravelBaseAppServiceProvider extends ServiceProvider
             $this->commands([
                 CreateInitialUser::class,
             ]);
+            if (config('laravel-base-app.create_states_cities_tables')) {
+                $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class CreateInitialUser extends Command
 {
-    protected $signature = 'devbrlucas:init-user {model}';
+    protected $signature = 'laravel-base-app:init-user {model}';
 
     protected $description = 'Create the initial user in the database';
 
