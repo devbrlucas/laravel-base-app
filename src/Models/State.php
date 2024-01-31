@@ -7,11 +7,12 @@ namespace DevBRLucas\LaravelBaseApp\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class State extends Model
 {
     public $timestamps = false;
-    
+
     public function getAll(?string $filter = null, ?string $region = null): Collection
     {
         return static::query()
@@ -29,13 +30,10 @@ class State extends Model
 
     public static function seed(): void
     {
-        $jsonString = file_get_contents(
-            __DIR__.'/../../resources/json/states.min.json',
+        $sql = file_get_contents(
+            __DIR__.'/../../resources/sql/states.sql',
         );
-        $json = json_decode($jsonString, true);
-        foreach ($json as $data) {
-            static::query()->create($data);
-        }
+        DB::statement($sql);
     }
 
     public static function random(array $columns = ['*']): self
