@@ -63,9 +63,9 @@ class Authenticatable extends Model
         return $this->generateToken($remember);
     }
 
-    public static function response(?WithToken $withToken = null, bool $remember = false): array | false
+    public static function response(?WithToken $withToken = null, bool $remember = false, ?self $user = null): array | false
     {
-        $user = Authenticatable::logged();
+        if (!$user) $user = Authenticatable::logged();
         if (!$user) return false;
         $class = get_class($user);
         $matches = [];
