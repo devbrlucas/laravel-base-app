@@ -76,7 +76,6 @@ class Authenticatable extends Model
             'user' => $user,
             'type' => $type,
         ];
-        print_r($data);
         if ($withToken) {
             $data['access_token'] = $withToken === WithToken::CREATE ? $user->generateToken($remember) : $user->refreshToken();
         }
