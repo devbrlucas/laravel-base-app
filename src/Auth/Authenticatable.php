@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DevBRLucas\LaravelBaseApp\Auth;
 
+use DevBRLucas\LaravelBaseApp\Enums\Auth\WithToken;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -60,5 +61,26 @@ class Authenticatable extends Model
         abort_unless(401, $accessToken);
         $remember = !((bool) $accessToken->expires_at);
         return $this->generateToken($remember);
+    }
+
+    public static function response(WithToken $withToken, bool $remember = false): array
+    {
+        $user = Authenticatable::logged();
+        abort_unless($user, 401);
+        $class = get_class($user);
+        $matches = [];
+        preg_match('/(\w+$)/', $class, $matches);
+        $type = preg_replace('/(\w)([A-Z])/', '$1-$2', $matches[0]);
+        $type = strtolower($type);
+        $data = [
+            'user' => $user,
+            'type' => $type,
+
+        ];
+        print_r($data);
+        if ($withToken) {
+            $data['access_token'] = $withToken === WithToken::CREATE ? $user->generateToken($remember) : $user->refreshToken();
+        }
+        return $data;
     }
 }
