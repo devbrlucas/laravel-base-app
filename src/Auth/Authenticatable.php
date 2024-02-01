@@ -63,10 +63,10 @@ class Authenticatable extends Model
         return $this->generateToken($remember);
     }
 
-    public static function response(WithToken $withToken, bool $remember = false): array
+    public static function response(?WithToken $withToken = null, bool $remember = false): array | false
     {
         $user = Authenticatable::logged();
-        abort_unless($user, 401);
+        if (!$user) return false;
         $class = get_class($user);
         $matches = [];
         preg_match('/(\w+$)/', $class, $matches);
@@ -75,7 +75,6 @@ class Authenticatable extends Model
         $data = [
             'user' => $user,
             'type' => $type,
-
         ];
         print_r($data);
         if ($withToken) {
