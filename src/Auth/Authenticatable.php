@@ -81,4 +81,11 @@ class Authenticatable extends Model
         }
         return $data;
     }
+
+    protected static function booted(): void
+    {
+        static::deleted(function (self $model): void {
+            $model->cleanTokens();
+        });
+    }
 }
