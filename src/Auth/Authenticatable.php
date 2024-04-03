@@ -62,6 +62,16 @@ class Authenticatable extends Model
         return null;
     }
 
+    public function generateQueryAuthData(): array
+    {
+        $data = [
+            'user_type' => get_class($this),
+            'user_id' => $this->id,
+        ];
+        $data = json_encode($data);
+        return ['auth_logged' => base64_encode($data)];
+    }
+
     public function refreshToken(): string
     {
         /** @var PersonalAccessToken | null */
