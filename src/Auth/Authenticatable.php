@@ -51,7 +51,10 @@ class Authenticatable extends Model
         $request = App::make(Request::class);
         $accessToken = PersonalAccessToken::findToken($request->bearerToken());
         if ($accessToken) return $accessToken->tokenable()->first();
-        $userData = base64_decode($request->query('auth_logged', ''));
+        $userData = json_decode(
+            base64_decode($request->query('auth_logged', '')),
+            true,
+        );
         if (!$userData) return null;
         /** @var PersonalAccessToken */
         $accessToken = PersonalAccessToken::query()
