@@ -50,8 +50,14 @@ class Authenticatable extends Model
         /** @var Request */
         $request = App::make(Request::class);
         $accessToken = PersonalAccessToken::findToken($request->bearerToken());
-        if (!$accessToken) return null;
-        return $accessToken->tokenable()->first();
+        if ($accessToken) return $accessToken->tokenable()->first();
+        /** @var PersonalAccessToken */
+        $accessToken = PersonalAccessToken::query()
+                                                    ->where('tokenable_type', $request->query('user_type'))
+                                                    ->where('tokenable_id', $request->query('user_id'))
+                                                    ->first();
+        if ($accessToken) return $accessToken->tokenable()->first();
+        return null;
     }
 
     public function refreshToken(): string
