@@ -91,7 +91,7 @@ class Authenticatable extends Model
         $class = get_class($user);
         $matches = [];
         preg_match('/(\w+$)/', $class, $matches);
-        $type = preg_replace('/(\w)([A-Z])/', '$1-$2', $matches[0]);
+        $type = preg_replace('/(\w)([A-Z])/', '$1_$2', $matches[0]);
         $type = strtolower($type);
         $data = [
             'user' => $user,
