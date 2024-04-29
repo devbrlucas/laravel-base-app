@@ -46,12 +46,12 @@ class Authenticatable extends Model
         $this->tokens()->delete();
     }
 
-    public static function logged(): static | null
+    public static function logged(?array $withoutScopes = null): static | null
     {
         /** @var Request */
         $request = App::make(Request::class);
         $accessToken = PersonalAccessToken::findToken($request->bearerToken());
-        if ($accessToken) return $accessToken->tokenable()->first();
+        if ($accessToken) return $accessToken->tokenable()->withoutGlobalScopes($withoutScopes)->first();
         $userData = json_decode(
             base64_decode($request->query('auth_logged', '')),
             true,
