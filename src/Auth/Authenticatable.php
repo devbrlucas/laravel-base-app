@@ -62,7 +62,7 @@ class Authenticatable extends Model
                                                     ->where('tokenable_type', $userData['user_type'])
                                                     ->where('tokenable_id', $userData['user_id'])
                                                     ->first();
-        if ($accessToken) return $accessToken->tokenable()->first();
+        if ($accessToken) return $accessToken->tokenable()->withoutGlobalScopes($withoutScopes)->first();
         return null;
     }
 
