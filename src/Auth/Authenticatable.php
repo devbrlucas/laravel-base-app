@@ -18,7 +18,7 @@ class Authenticatable extends Model
 {
     use HasApiTokens;
     
-    public static function login(array $data, ?Builder $builder): static | false
+    public static function login(array $data, ?Builder $builder = null): static | false
     {
         unset($data['remember']);
         $password = Arr::pull($data, 'password');
