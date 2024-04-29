@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevBRLucas\LaravelBaseApp\Auth;
 
 use DevBRLucas\LaravelBaseApp\Enums\Auth\WithToken;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -17,11 +18,11 @@ class Authenticatable extends Model
 {
     use HasApiTokens;
     
-    public static function login(array $data): static | false
+    public static function login(array $data, ?Builder $builder): static | false
     {
         unset($data['remember']);
         $password = Arr::pull($data, 'password');
-        $user = static::query()->where($data)->first();
+        $user = ($builder ?? static::query())->where($data)->first();
         if (!$user) return false;
         return Hash::check($password, $user->password) ? $user : false;
     }
