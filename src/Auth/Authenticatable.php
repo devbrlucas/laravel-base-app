@@ -66,6 +66,26 @@ class Authenticatable extends Model
         return null;
     }
 
+    public function token(): PersonalAccessToken | null
+    {
+        /** @var Request */
+        $request = App::make(Request::class);
+        $accessToken = PersonalAccessToken::findToken($request->bearerToken());
+        if ($accessToken) return $accessToken;
+        $userData = json_decode(
+            base64_decode($request->query('auth_logged', '')),
+            true,
+        );
+        if (!$userData) return null;
+        /** @var PersonalAccessToken */
+        $accessToken = PersonalAccessToken::query()
+                                                    ->where('tokenable_type', $userData['user_type'])
+                                                    ->where('tokenable_id', $userData['user_id'])
+                                                    ->first();
+        if ($accessToken) return $accessToken;
+        return null;
+    }
+
     public function generateQueryAuthData(): array
     {
         $data = [
