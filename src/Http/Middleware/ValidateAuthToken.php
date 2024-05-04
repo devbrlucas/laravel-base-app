@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace DevBRLucas\LaravelBaseApp\Http\Middleware;
 
 use Closure;
+use DevBRLucas\LaravelBaseApp\Auth\Authenticatable;
 use Illuminate\Http\Request;
-use Laravel\Sanctum\PersonalAccessToken;
 use Symfony\Component\HttpFoundation\Response;
 
 class ValidateAuthToken
@@ -16,7 +16,9 @@ class ValidateAuthToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $accessToken = PersonalAccessToken::findToken($request->bearerToken());
+        $user = Authenticatable::logged();
+        abort_unless($user, 401);
+        $accessToken = $user->token();
         abort_unless($accessToken, 401);
         if ($accessToken->expires_at) {
             if (now()->greaterThanOrEqualTo($accessToken->expires_at)) {
