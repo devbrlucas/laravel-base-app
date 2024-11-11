@@ -4,50 +4,62 @@ declare(strict_types=1);
 
 namespace DevBRLucas\LaravelBaseApp\Support;
 
+use DevBRLucas\LaravelBaseApp\Enums\PDF\Disposition;
 use DevBRLucas\LaravelBaseApp\Enums\PDF\Orientation;
 use Dompdf\Dompdf;
 
 class PDF
 {
-    private static string $title;
-    private static string $content;
-
-    public static function generate(string $content, string $title, Orientation $orientation, array $options = []): string
+    public function __construct(
+        private readonly string $title,
+        private readonly string $content,
+    )
     {
-        $pdf = new Dompdf([
+        //
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;    
+    }
+
+    public function geTitle(): string
+    {
+        return $this->title;
+    }
+
+    public static function generate(string $content, string $title, Orientation $orientation, string|array $size = 'A4', array $options = []): static
+    {
+        $dompdf = new Dompdf([
             'isRemoteEnabled' => true,
             'isJavascriptEnabled' => false,
             'dpi' => 300,
             ...$options,
         ]);
-        $pdf->addInfo('title', $title);
-        $pdf->setPaper('A4', $orientation->value);
-        $pdf->loadHtml($content);
-        $pdf->render();
-        static::$content = $pdf->output();
-        static::$title = $title;
-        return static::$content;
+        $dompdf->addInfo('title', $title);
+        $dompdf->setPaper($size, $orientation->value);
+        $dompdf->loadHtml($content);
+        $dompdf->render();
+        return new static($title, $dompdf->output());
     }
 
-    public static function generateTempFile(string $content, string $title, Orientation $orientation, bool $isHTML = true, array $options = []): string
+    public static function generateTempFile(string $content, string $title, Orientation $orientation, bool $isHTML = true, string|array $size = 'A4', array $options = []): string
     {
-        if ($isHTML) $content = static::generate($content, $title, $orientation, $options);
-        static::$content = $content;
-        static::$title = $title;
+        if ($isHTML) {
+            $pdf = static::generate($content, $title, $orientation, $size, $options);
+            $content = $pdf->getContent();
+        }
         $path = sys_get_temp_dir().'/'.uniqid().'.pdf';
         file_put_contents($path, $content);
         return $path;
     }
 
-    public static function headers(): array
+    public function headers(Disposition $disposition = Disposition::INLINE): array
     {
-        $file = static::$title;
-        $content = static::$content;
-        static::$title = static::$content = '';
         return [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => "filename=$file.pdf",
-            'Content-Length' => strlen($content),
+            'Content-Disposition' => "{$disposition->value}; filename={$this->title}.pdf",
+            'Content-Length' => strlen($this->content),
         ];
     }
 }
