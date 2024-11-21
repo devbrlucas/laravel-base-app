@@ -14,9 +14,9 @@
         }
     ],
     "require": {
-        "illuminate/support": "^10.31",
-        "laravel/framework": "^10.31",
-        "laravel/sanctum": "^3.3",
+        "illuminate/support": "^10.31|^11",
+        "laravel/framework": "^10.31|^11",
+        "laravel/sanctum": "^3.3|^4",
         "dompdf/dompdf": "^2.0",
         "shuchkin/simplexlsxgen": "^1.3"
     },
