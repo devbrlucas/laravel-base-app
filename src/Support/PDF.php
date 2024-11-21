@@ -54,7 +54,7 @@ class PDF
         return $path;
     }
 
-    public function headers(Disposition $disposition = Disposition::INLINE): array
+    public function getHeaders(Disposition $disposition = Disposition::INLINE): array
     {
         return [
             'Content-Type' => 'application/pdf',
