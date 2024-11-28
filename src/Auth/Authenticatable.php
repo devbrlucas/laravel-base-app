@@ -8,6 +8,7 @@ use DevBRLucas\LaravelBaseApp\Enums\Auth\WithToken;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
@@ -105,7 +106,7 @@ class Authenticatable extends Model
         return $this->generateToken($remember);
     }
 
-    public static function response(?WithToken $withToken = null, bool $remember = false, ?self $user = null): array | false
+    public static function response(?WithToken $withToken = null, bool $remember = false, self | JsonResource $user = null): array | false
     {
         if (!$user) $user = Authenticatable::logged();
         if (!$user) return false;
@@ -115,7 +116,7 @@ class Authenticatable extends Model
         $type = preg_replace('/(\w)([A-Z])/', '$1_$2', $matches[0]);
         $type = strtolower($type);
         $data = [
-            'user' => $user,
+            'user' => $user instanceof self ? $user : $user->resolve(),
             'type' => $type,
         ];
         if ($withToken) {
