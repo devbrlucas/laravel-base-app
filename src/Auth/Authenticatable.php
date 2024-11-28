@@ -110,7 +110,7 @@ class Authenticatable extends Model
     {
         if (!$user) $user = Authenticatable::logged();
         if (!$user) return false;
-        $class = get_class($user);
+        $class = get_class($user instanceof self ? $user : $user->resource);
         $matches = [];
         preg_match('/(\w+$)/', $class, $matches);
         $type = preg_replace('/(\w)([A-Z])/', '$1_$2', $matches[0]);
