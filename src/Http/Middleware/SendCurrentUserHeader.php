@@ -19,7 +19,8 @@ class SendCurrentUserHeader
         $callback = config('laravel-base-app.send_user_callback');
         $response = $next($request);
         $user = Authenticatable::logged();
-        $data = $callback ? $callback($user) : Authenticatable::response(user: $user);
+        $user = $callback ? $callback($user) : $user;
+        $data = Authenticatable::response(user: $user);
         if (!$data) return $response;
         $data = json_encode($data);
         $response->headers->set('App-Current-User', $data);
