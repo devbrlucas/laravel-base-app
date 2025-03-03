@@ -8,7 +8,11 @@ use Shuchkin\SimpleXLSXGen;
 
 class XLSX extends SimpleXLSXGen
 {
-    private readonly string $filename;
+    public function __construct(private readonly string $filename)
+    {
+        parent::__construct();
+        $this->setTitle($filename);
+    }
 
     public static function generate(string $filename, array $rows, ?array $header = null): static
     {
@@ -16,16 +20,23 @@ class XLSX extends SimpleXLSXGen
             ...($header ? [$header] : []),
             ...$rows,
         ];
-        $xlsx = static::fromArray($sheetRows)->setTitle($filename);
-        $xlsx->filename = $filename;
+        $xlsx = new static($filename);
+        $xlsx->addSheet($sheetRows);
         return $xlsx;
     }
 
     public static function generateTempFile(string $filename, array $rows, ?array $header = null): string
     {
-        $content = static::generate($filename, $rows, $header);
+        $xlsx = static::generate($filename, $rows, $header);
         $path = sys_get_temp_dir().'/'.uniqid().'.xlsx';
-        file_put_contents($path, $content);
+        file_put_contents($path, $xlsx->getContent());
+        return $path;
+    }
+
+    public function generateTempFileFromSheets(): string
+    {
+        $path = sys_get_temp_dir().'/'.uniqid().'.xlsx';
+        file_put_contents($path, $this->getContent());
         return $path;
     }
 
