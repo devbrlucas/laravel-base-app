@@ -8,42 +8,37 @@ use DevBRLucas\LaravelBaseApp\Enums\PDF\Disposition;
 use DevBRLucas\LaravelBaseApp\Enums\PDF\Orientation;
 use Dompdf\Dompdf;
 
-class PDF
+class PDF extends Dompdf
 {
-    public function __construct(
-        private readonly string $title,
-        private readonly string $content,
-    )
-    {
-        //
-    }
+    private readonly string $title;
 
     public function getContent(): string
     {
-        return $this->content;    
+        return $this->output();
     }
 
-    public function geTitle(): string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public static function generate(string $content, string $title, Orientation $orientation, string|array $size = 'A4', array $options = []): static
+    public static function generate(string $content, string $title, Orientation $orientation = Orientation::PORTRAIT, string|array $size = 'A4', array $options = []): static
     {
-        $dompdf = new Dompdf([
+        $pdf = new static([
             'isRemoteEnabled' => true,
             'isJavascriptEnabled' => false,
             'dpi' => 300,
             ...$options,
         ]);
-        $dompdf->addInfo('title', $title);
-        $dompdf->setPaper($size, $orientation->value);
-        $dompdf->loadHtml($content);
-        $dompdf->render();
-        return new static($title, $dompdf->output());
+        $pdf->addInfo('title', $title);
+        $pdf->setPaper($size, $orientation->value);
+        $pdf->loadHtml($content);
+        $pdf->render();
+        $pdf->title = $title;
+        return $pdf;
     }
 
-    public static function generateTempFile(string $content, string $title, Orientation $orientation, bool $isHTML = true, string|array $size = 'A4', array $options = []): string
+    public static function generateTempFile(string $content, string $title, Orientation $orientation = Orientation::PORTRAIT, bool $isHTML = true, string|array $size = 'A4', array $options = []): string
     {
         if ($isHTML) {
             $pdf = static::generate($content, $title, $orientation, $size, $options);
@@ -59,7 +54,7 @@ class PDF
         return [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => "{$disposition->value}; filename={$this->title}.pdf",
-            'Content-Length' => strlen($this->content),
+            'Content-Length' => strlen($this->getContent()),
         ];
     }
 }

@@ -6,42 +6,40 @@ namespace DevBRLucas\LaravelBaseApp\Support;
 
 use Shuchkin\SimpleXLSXGen;
 
-class XLSX
+class XLSX extends SimpleXLSXGen
 {
-    private static string $filename;
-    private static string $content;
+    private readonly string $filename;
 
-    public static function generate(string $filename, array $header, array $data): string
+    public static function generate(string $filename, array $rows, ?array $header = null): static
     {
-        $rows = [
-            $header,
-            ...$data,
+        $sheetRows = [
+            ...($header ? [$header] : []),
+            ...$rows,
         ];
-        $xlsxContent = (string) SimpleXLSXGen::fromArray($rows)->setTitle($filename);
-        static::$content = $xlsxContent;
-        static::$filename = $filename;
-        return static::$content;
+        $xlsx = static::fromArray($sheetRows)->setTitle($filename);
+        $xlsx->filename = $filename;
+        return $xlsx;
     }
 
-    public static function generateTempFile(string $filename, array $header, array $data): string
+    public static function generateTempFile(string $filename, array $rows, ?array $header = null): string
     {
-        $content = static::generate($filename, $header, $data);
-        static::$content = $content;
-        static::$filename = $filename;
+        $content = static::generate($filename, $rows, $header);
         $path = sys_get_temp_dir().'/'.uniqid().'.xlsx';
         file_put_contents($path, $content);
         return $path;
     }
 
-    public static function headers(): array
+    public function getContent(): string
     {
-        $file = static::$filename;
-        $content = static::$content;
-        static::$filename = static::$content = '';
+        return (string) $this;
+    }
+
+    public function getHeaders(): array
+    {
         return [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => "filename=$file.xlsx",
-            'Content-Length' => strlen($content),
+            'Content-Disposition' => "filename={$this->filename}.xlsx",
+            'Content-Length' => strlen($this->getContent()),
         ];
     }
 }
