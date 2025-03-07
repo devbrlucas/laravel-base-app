@@ -8,6 +8,8 @@ use Shuchkin\SimpleXLSXGen;
 
 class XLSX extends SimpleXLSXGen
 {
+    private ?string $content = null;
+
     public function __construct(private readonly string $filename)
     {
         parent::__construct();
@@ -42,7 +44,8 @@ class XLSX extends SimpleXLSXGen
 
     public function getContent(): string
     {
-        return (string) $this;
+        $this->content ??= (string) $this;
+        return $this->content;
     }
 
     public function getHeaders(): array
